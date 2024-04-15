@@ -112,7 +112,7 @@ int ScatterNDPlugin::enqueue(
         void *const * outputs, 
         void * workspace, 
         cudaStream_t stream
-    ) TRT_NOEXCEPT override
+    ) TRT_NOEXCEPT
 {
     int channel_num = mOutputSize[1];
     int max_index_num = mInputIndexSize[0];
@@ -137,7 +137,8 @@ int ScatterNDPlugin::enqueue(
     return 0;
 }
 
-bool ScatterNDPlugin::supportsFormatCombination(int pos, const PluginTensorDesc* inOut, int nbInputs, int nbOutputs) const TRT_NOEXCEPT override {
+bool ScatterNDPlugin::supportsFormatCombination(int pos, const PluginTensorDesc* inOut, int nbInputs, int nbOutputs) const TRT_NOEXCEPT
+{
     // Ensure the tensor format is kLINEAR, which is required.
     if (inOut[pos].format != TensorFormat::kLINEAR) {
         return false;
@@ -178,7 +179,7 @@ bool ScatterNDPlugin::canBroadcastInputAcrossBatch(int inputIndex) const TRT_NOE
   return false;
 }
 
-void ScatterNDPlugin::configurePlugin(const PluginTensorDesc* in, int32_t nbInput, const PluginTensorDesc* out, int32_t nbOutput) noexcept override {
+void ScatterNDPlugin::configurePlugin(const PluginTensorDesc* in, int32_t nbInput, const PluginTensorDesc* out, int32_t nbOutput) noexcept {
     // Check the number of inputs and outputs first to avoid accessing out of bounds
     if (nbInput > 1 && nbOutput > 0) {
         // Configure internal buffer sizes based on the input and output tensor dimensions
@@ -204,7 +205,7 @@ void ScatterNDPlugin::destroy() TRT_NOEXCEPT
     delete this;
 }
 
-IPluginV2Ext* ScatterNDPlugin::clone() const TRT_NOEXCEPT override {
+IPluginV2Ext* ScatterNDPlugin::clone() const TRT_NOEXCEPT {
     ScatterNDPlugin* clonedPlugin = new ScatterNDPlugin(mLayerName, mOutputSize, mInputIndexSize, mDataType);
     clonedPlugin->setPluginNamespace(mNamespace.c_str());
     return clonedPlugin;  // Cast is not needed if ScatterNDPlugin is derived from IPluginV2Ext
